@@ -1,5 +1,6 @@
 import 'package:docusense_ai/app_localization.dart';
 import 'package:flutter/material.dart';
+import '../screens/home/SettingsScreen.dart';
 import '../utils/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:docusense_ai/providers/language_provider.dart';
@@ -43,7 +44,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             child: const Center(
               child: Text(
-                'D',
+                'I',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -77,7 +78,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   builder: (context) {
                     return Dialog(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       backgroundColor: const Color(0xFFF5F5FF),
                       child: Padding(
@@ -160,6 +161,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             _showLanguageDialog(context);
           },
         ),
+        IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return SettingsScreen();
+            }));
+          },
+        ),
       ],
     );
   }
@@ -167,76 +176,157 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   void _showLanguageDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context).selectLanguage),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                _buildLanguageOption(
-                  context,
-                  AppLocalizations.of(context).english,
-                  'en',
-                ),
-                _buildLanguageOption(
-                  context,
-                  AppLocalizations.of(context).spanish,
-                  'es',
-                ),
-                _buildLanguageOption(
-                  context,
-                  AppLocalizations.of(context).french,
-                  'fr',
-                ),
-                _buildLanguageOption(
-                  context,
-                  AppLocalizations.of(context).german,
-                  'de',
-                ),
-                _buildLanguageOption(
-                  context,
-                  AppLocalizations.of(context).dutch,
-                  'nl',
-                ),
-                _buildLanguageOption(
-                  context,
-                  AppLocalizations.of(context).arabic,
-                  'ar',
-                ),
-                _buildLanguageOption(
-                  context,
-                  AppLocalizations.of(context).chinese,
-                  'zh',
-                ),
-              ],
-            ),
-          ),
-        );
+      barrierDismissible: true,
+      builder: (BuildContext dialogContext) {
+        return _LanguageDialog();
       },
     );
   }
 
-  Widget _buildLanguageOption(
-    BuildContext context,
-    String language,
-    String code,
-  ) {
-    return ListTile(
-      leading: Text(_getFlagEmoji(code)),
-      title: Text(language),
-      trailing:
-          Provider.of<LanguageProvider>(context).currentLocale.languageCode ==
-              code
-          ? const Icon(Icons.check, color: Colors.green)
-          : null,
-      onTap: () {
-        Provider.of<LanguageProvider>(
-          context,
-          listen: false,
-        ).setLocale(Locale(code));
-        Navigator.of(context).pop();
+  String _getFlagEmoji(String languageCode) {
+    switch (languageCode) {
+      case 'en':
+        return '🇺🇸';
+      case 'es':
+        return '🇪🇸';
+      case 'fr':
+        return '🇫🇷';
+      case 'de':
+        return '🇩🇪';
+      case 'nl':
+        return '🇳🇱';
+      case 'ar':
+        return '🇸🇦';
+      case 'zh':
+        return '🇨🇳';
+      default:
+        return '🌐';
+    }
+  }
+}
+
+// Separate StatefulWidget for the language dialog
+class _LanguageDialog extends StatefulWidget {
+  @override
+  State<_LanguageDialog> createState() => _LanguageDialogState();
+}
+
+class _LanguageDialogState extends State<_LanguageDialog> {
+  bool _isChangingLanguage = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+
+    return AlertDialog(
+      title: Text(localizations.selectLanguage),
+      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 400,
+          minWidth: 280,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildLanguageOption(localizations.english, 'en'),
+              _buildLanguageOption(localizations.spanish, 'es'),
+              _buildLanguageOption(localizations.french, 'fr'),
+              _buildLanguageOption(localizations.german, 'de'),
+              _buildLanguageOption(localizations.dutch, 'nl'),
+              _buildLanguageOption(localizations.arabic, 'ar'),
+              _buildLanguageOption(localizations.chinese, 'zh'),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _isChangingLanguage
+              ? null
+              : () {
+            if (mounted) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: Text(
+            localizations.cancel,
+            style: TextStyle(
+              color: _isChangingLanguage ? Colors.grey : null,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLanguageOption(String language, String code) {
+    return Consumer<LanguageProvider>(
+      builder: (context, languageProvider, child) {
+        final isSelected = languageProvider.currentLocale.languageCode == code;
+
+        return ListTile(
+          enabled: !_isChangingLanguage,
+          leading: Text(
+            _getFlagEmoji(code),
+            style: const TextStyle(fontSize: 24),
+          ),
+          title: Text(
+            language,
+            style: TextStyle(
+              color: _isChangingLanguage ? Colors.grey : null,
+            ),
+          ),
+          trailing: isSelected
+              ? const Icon(Icons.check, color: Colors.green)
+              : null,
+          onTap: isSelected || _isChangingLanguage
+              ? null
+              : () async {
+            if (_isChangingLanguage) return;
+
+            setState(() {
+              _isChangingLanguage = true;
+            });
+
+            try {
+              // Get provider reference before async gap
+              final languageProvider = Provider.of<LanguageProvider>(
+                context,
+                listen: false,
+              );
+
+              // Change the locale
+              await languageProvider.setLocale(Locale(code));
+
+              // Small delay to ensure state is updated
+              await Future.delayed(const Duration(milliseconds: 100));
+
+              // Close dialog if still mounted
+              if (mounted && context.mounted) {
+                Navigator.of(context).pop();
+              }
+            } catch (e) {
+              debugPrint('Error changing language: $e');
+
+              if (mounted) {
+                setState(() {
+                  _isChangingLanguage = false;
+                });
+
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to change language. Please try again.'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+              }
+            }
+          },
+        );
       },
     );
   }

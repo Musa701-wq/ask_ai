@@ -62,7 +62,7 @@ class SummaryEmpty extends StatelessWidget {
                     final generateFuture = summaryProvider.generateSummary();
 
                     // 2️⃣ Show Interstitial Ad
-                    AdManager.showRewardedAd(
+                    AdManager.showSummaryAd(
                       onUserEarnedReward: (reward) async {
                         debugPrint(
                           '🎁 User watched ad and earned reward: $reward',

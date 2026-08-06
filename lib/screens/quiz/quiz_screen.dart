@@ -3,6 +3,7 @@ import 'package:docusense_ai/utils/ads_manager.dart';
 import 'package:docusense_ai/utils/gemini_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../google_analytics.dart';
 import '../../providers/pdf_provider.dart';
 import '../../models/mcq.dart';
 import 'widgets/mcq_widget.dart';
@@ -138,7 +139,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         _generateQuiz(pdfProvider);
-                        AdManager.showRewardedAd(
+                        AdManager.showQuizAd(
                           onUserEarnedReward: (reward) async {
                             debugPrint(
                               '🎁 User watched ad and earned reward: $reward',
@@ -268,7 +269,7 @@ class _QuizScreenState extends State<QuizScreen> {
                         OutlinedButton(
                           onPressed: () {
                             _generateQuiz(pdfProvider);
-                            AdManager.showRewardedAd(
+                            AdManager.showQuizAd(
                               onUserEarnedReward: (reward) async {
                                 debugPrint(
                                   '🎁 User watched ad and earned reward: $reward',
@@ -319,6 +320,8 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Future<void> _generateQuiz(PdfProvider pdfProvider) async {
+    AnalyticsManager.trackQuizGenerated(); // ✅ ADD THIS LINE
+
     if (pdfProvider.uploadedFileContent == null ||
         pdfProvider.uploadedFileContent!.isEmpty) {
       setState(() {
