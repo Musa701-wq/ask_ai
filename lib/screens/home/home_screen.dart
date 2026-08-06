@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 alignment: Alignment.center,
                 width: double.infinity,
-                height: 100, // Small size for native ad
+                height: 130, // Small size for native ad
                 child: AdWidget(ad: _nativeAd!),
               ),
 

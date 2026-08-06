@@ -41,49 +41,51 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyC2_tlxCt_SzFVysw58cMt4dcmdPJSWepI',
-    appId: '1:29947398865:web:ce33e00efc4971efe9d3f0',
-    messagingSenderId: '29947398865',
-    projectId: 'vault-99bd4',
-    authDomain: 'vault-99bd4.firebaseapp.com',
-    storageBucket: 'vault-99bd4.firebasestorage.app',
-    measurementId: 'G-6510JZNXW4',
+    apiKey: 'AIzaSyASGAQ_LBvL_0x89O0ezevJ4_Avi8J3a1s',
+    appId: '1:184992833888:web:b8bdbbb53381024213fe05',
+    messagingSenderId: '184992833888',
+    projectId: 'intellidocs-6b57a',
+    authDomain: 'intellidocs-6b57a.firebaseapp.com',
+    storageBucket: 'intellidocs-6b57a.firebasestorage.app',
+    measurementId: 'G-B1YY41HG5D',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyArAneRug9zvUrRCsI_oGrz_LHsKMmcmqo',
-    appId: '1:29947398865:ios:da3fcee8c12a9011e9d3f0',
-    messagingSenderId: '29947398865',
-    projectId: 'vault-99bd4',
-    storageBucket: 'vault-99bd4.firebasestorage.app',
-    iosBundleId: 'com.example.docusenseAi',
+    apiKey: 'AIzaSyCL2zluJi4VrrNigdyJGfeh12aF-nxQ160',
+    appId: '1:184992833888:ios:f17f6e088337654713fe05',
+    messagingSenderId: '184992833888',
+    projectId: 'intellidocs-6b57a',
+    storageBucket: 'intellidocs-6b57a.firebasestorage.app',
+    iosClientId: '184992833888-imt41q5ddv8jifdelhp0rccdi71o7nhh.apps.googleusercontent.com',
+    iosBundleId: 'com.vectorlabs.cleverdocs',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyArAneRug9zvUrRCsI_oGrz_LHsKMmcmqo',
-    appId: '1:29947398865:ios:da3fcee8c12a9011e9d3f0',
-    messagingSenderId: '29947398865',
-    projectId: 'vault-99bd4',
-    storageBucket: 'vault-99bd4.firebasestorage.app',
+    apiKey: 'AIzaSyCL2zluJi4VrrNigdyJGfeh12aF-nxQ160',
+    appId: '1:184992833888:ios:ee19581d8e2d598713fe05',
+    messagingSenderId: '184992833888',
+    projectId: 'intellidocs-6b57a',
+    storageBucket: 'intellidocs-6b57a.firebasestorage.app',
+    iosClientId: '184992833888-b9eg4k2i4ks3flcn5q70vkpcqdqrc232.apps.googleusercontent.com',
     iosBundleId: 'com.example.docusenseAi',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyC2_tlxCt_SzFVysw58cMt4dcmdPJSWepI',
-    appId: '1:29947398865:web:852648b985a7fe39e9d3f0',
-    messagingSenderId: '29947398865',
-    projectId: 'vault-99bd4',
-    authDomain: 'vault-99bd4.firebaseapp.com',
-    storageBucket: 'vault-99bd4.firebasestorage.app',
-    measurementId: 'G-CJ4TJFE3JN',
+    apiKey: 'AIzaSyASGAQ_LBvL_0x89O0ezevJ4_Avi8J3a1s',
+    appId: '1:184992833888:web:45dcad5076aa3f7f13fe05',
+    messagingSenderId: '184992833888',
+    projectId: 'intellidocs-6b57a',
+    authDomain: 'intellidocs-6b57a.firebaseapp.com',
+    storageBucket: 'intellidocs-6b57a.firebasestorage.app',
+    measurementId: 'G-L096L438QL',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAXkfWcENInor6OpUBBWHR7PjNiPN8Ay_U',
-    appId: '1:29947398865:android:9f8690f5b888dd05e9d3f0',
-    messagingSenderId: '29947398865',
-    projectId: 'vault-99bd4',
-    storageBucket: 'vault-99bd4.firebasestorage.app',
+    apiKey: 'AIzaSyDgnXcx4nlvaZs--t-KHr1OYd3uEIlgXTA',
+    appId: '1:184992833888:android:f1ff807039e9b23d13fe05',
+    messagingSenderId: '184992833888',
+    projectId: 'intellidocs-6b57a',
+    storageBucket: 'intellidocs-6b57a.firebasestorage.app',
   );
 
 }

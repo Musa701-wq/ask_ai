@@ -1,9 +1,595 @@
+// import 'package:docusense_ai/app_localization.dart';
+// import 'package:docusense_ai/models/app_state.dart';
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+// import 'package:docusense_ai/providers/file_provider.dart';
+// import 'package:docusense_ai/providers/pdf_provider.dart'; // ADD THIS IMPORT
+//
+// class RecentFilesSection extends StatelessWidget {
+//   const RecentFilesSection({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Consumer<FileProvider>(
+//       builder: (context, fileProvider, child) {
+//         final recentFiles = fileProvider.recentFiles;
+//
+//         if (recentFiles.isEmpty) {
+//           return const SizedBox.shrink(); // Don't show if no recent files
+//         }
+//
+//         return Container(
+//           margin: const EdgeInsets.only(top: 30),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               // Section Title
+//               Padding(
+//                 padding: const EdgeInsets.only(bottom: 16),
+//                 child: Text(
+//                   AppLocalizations.of(context).recentFiles,
+//                   style: const TextStyle(
+//                     fontSize: 20,
+//                     fontWeight: FontWeight.w600,
+//                     color: Color(0xFF333333),
+//                   ),
+//                 ),
+//               ),
+//
+//               // Recent Files List
+//               _RecentFilesList(recentFiles: recentFiles),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
+//
+// class _RecentFilesList extends StatelessWidget {
+//   final List<RecentFile> recentFiles;
+//
+//   const _RecentFilesList({required this.recentFiles});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return LayoutBuilder(
+//       builder: (context, constraints) {
+//         // For mobile, show in a column
+//         if (constraints.maxWidth < 600) {
+//           return Column(
+//             children: recentFiles
+//                 .map((file) => _RecentFileItem(file: file))
+//                 .toList(),
+//           );
+//         }
+//         // For larger screens, show in a wrap
+//         return Wrap(
+//           spacing: 12,
+//           runSpacing: 12,
+//           children: recentFiles
+//               .map(
+//                 (file) =>
+//                     SizedBox(width: 200, child: _RecentFileItem(file: file)),
+//               )
+//               .toList(),
+//         );
+//       },
+//     );
+//   }
+// }
+//
+// class _RecentFileItem extends StatelessWidget {
+//   final RecentFile file;
+//
+//   const _RecentFileItem({required this.file});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final fileProvider = Provider.of<FileProvider>(context, listen: false);
+//     final pdfProvider = Provider.of<PdfProvider>(context, listen: false);
+//
+//     return Card(
+//       elevation: 2,
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.circular(12),
+//         side: BorderSide(
+//           color: file.isSelected
+//               ? const Color(0xFF8A2BE2)
+//               : const Color(0xFFF0EAFA),
+//           width: file.isSelected ? 2 : 1,
+//         ),
+//       ),
+//       child: InkWell(
+//         borderRadius: BorderRadius.circular(12),
+//         onTap: () {
+//           fileProvider.selectRecentFile(file);
+//         },
+//         child: Container(
+//           padding: const EdgeInsets.all(16),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               // File Icon and Name
+//               Row(
+//                 children: [
+//                   Container(
+//                     padding: const EdgeInsets.all(8),
+//                     decoration: BoxDecoration(
+//                       color: const Color(0xFF8A2BE2).withOpacity(0.1),
+//                       borderRadius: BorderRadius.circular(8),
+//                     ),
+//                     child: const Icon(
+//                       Icons.picture_as_pdf,
+//                       size: 20,
+//                       color: Color(0xFF8A2BE2),
+//                     ),
+//                   ),
+//                   const SizedBox(width: 12),
+//                   Expanded(
+//                     child: Text(
+//                       file.name,
+//                       style: const TextStyle(
+//                         fontSize: 14,
+//                         fontWeight: FontWeight.w500,
+//                         color: Color(0xFF333333),
+//                       ),
+//                       overflow: TextOverflow.ellipsis,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//               const SizedBox(height: 8),
+//
+//               // File Size
+//               Text(
+//                 _formatFileSize(file.size),
+//                 style: const TextStyle(fontSize: 12, color: Color(0xFF666666)),
+//               ),
+//               const SizedBox(height: 4),
+//
+//               // Upload Date
+//               Text(
+//                 _formatDate(file.uploadDate),
+//                 style: const TextStyle(fontSize: 12, color: Color(0xFF666666)),
+//               ),
+//
+//               // Selected Indicator
+//               if (file.isSelected) ...[
+//                 const SizedBox(height: 8),
+//                 Container(
+//                   padding: const EdgeInsets.symmetric(
+//                     horizontal: 8,
+//                     vertical: 4,
+//                   ),
+//                   decoration: BoxDecoration(
+//                     color: const Color(0xFF8A2BE2),
+//                     borderRadius: BorderRadius.circular(4),
+//                   ),
+//                   child: const Text(
+//                     'Selected',
+//                     style: TextStyle(
+//                       fontSize: 10,
+//                       color: Colors.white,
+//                       fontWeight: FontWeight.w500,
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//
+//               // Action Buttons - UPDATED
+//               const SizedBox(height: 12),
+//               Row(
+//                 children: [
+//                   Expanded(
+//                     child: _buildActionButton(
+//                       icon: Icons.chat,
+//                       label: 'Chat',
+//                       onTap: () {
+//                         pdfProvider.selectRecentFileAndNavigate(
+//                           file,
+//                           BottomNavItem.chat,
+//                         );
+//                       },
+//                     ),
+//                   ),
+//                   const SizedBox(width: 8),
+//                   Expanded(
+//                     child: _buildActionButton(
+//                       icon: Icons.summarize,
+//                       label: 'Summary',
+//                       onTap: () {
+//                         pdfProvider.selectRecentFileAndNavigate(
+//                           file,
+//                           BottomNavItem.summarize,
+//                         );
+//                       },
+//                     ),
+//                   ),
+//                   const SizedBox(width: 8),
+//                   Expanded(
+//                     child: _buildActionButton(
+//                       icon: Icons.quiz,
+//                       label: 'Quiz',
+//                       onTap: () {
+//                         pdfProvider.selectRecentFileAndNavigate(
+//                           file,
+//                           BottomNavItem.quiz,
+//                         );
+//                       },
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildActionButton({
+//     required IconData icon,
+//     required String label,
+//     required VoidCallback onTap,
+//   }) {
+//     return GestureDetector(
+//       onTap: onTap,
+//       child: Container(
+//         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+//         decoration: BoxDecoration(
+//           color: const Color(0xFF8A2BE2).withOpacity(0.1),
+//           borderRadius: BorderRadius.circular(6),
+//         ),
+//         child: Column(
+//           children: [
+//             Icon(icon, size: 16, color: const Color(0xFF8A2BE2)),
+//             const SizedBox(height: 2),
+//             Text(
+//               label,
+//               style: const TextStyle(
+//                 fontSize: 10,
+//                 color: Color(0xFF8A2BE2),
+//                 fontWeight: FontWeight.w500,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   String _formatFileSize(int bytes) {
+//     if (bytes < 1024) return '$bytes B';
+//     if (bytes < 1048576) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+//     return '${(bytes / 1048576).toStringAsFixed(1)} MB';
+//   }
+//
+//   String _formatDate(DateTime date) {
+//     final now = DateTime.now();
+//     final difference = now.difference(date);
+//
+//     if (difference.inDays > 7) {
+//       return '${date.day}/${date.month}/${date.year}';
+//     } else if (difference.inDays > 0) {
+//       return '${difference.inDays} days ago';
+//     } else if (difference.inHours > 0) {
+//       return '${difference.inHours} hours ago';
+//     } else if (difference.inMinutes > 0) {
+//       return '${difference.inMinutes} minutes ago';
+//     } else {
+//       return 'Just now';
+//     }
+//   }
+// }
+
+
 import 'package:docusense_ai/app_localization.dart';
 import 'package:docusense_ai/models/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:docusense_ai/providers/file_provider.dart';
-import 'package:docusense_ai/providers/pdf_provider.dart'; // ADD THIS IMPORT
+import 'package:docusense_ai/providers/pdf_provider.dart';
+
+// class RecentFilesSection extends StatelessWidget {
+//   const RecentFilesSection({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Consumer<FileProvider>(
+//       builder: (context, fileProvider, child) {
+//         final recentFiles = fileProvider.recentFiles;
+//
+//         if (recentFiles.isEmpty) {
+//           return const SizedBox.shrink();
+//         }
+//
+//         return Container(
+//           margin: const EdgeInsets.only(top: 30),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               // Section Title
+//               Padding(
+//                 padding: const EdgeInsets.only(bottom: 16),
+//                 child: Text(
+//                   AppLocalizations.of(context).recentFiles,
+//                   style: const TextStyle(
+//                     fontSize: 20,
+//                     fontWeight: FontWeight.w600,
+//                     color: Color(0xFF333333),
+//                   ),
+//                 ),
+//               ),
+//
+//               // Recent Files List
+//               _RecentFilesList(recentFiles: recentFiles),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
+//
+// class _RecentFilesList extends StatelessWidget {
+//   final List<RecentFile> recentFiles;
+//
+//   const _RecentFilesList({required this.recentFiles});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return LayoutBuilder(
+//       builder: (context, constraints) {
+//         // For mobile, show in a column
+//         if (constraints.maxWidth < 600) {
+//           return Column(
+//             children: recentFiles
+//                 .map((file) => _RecentFileItem(file: file))
+//                 .toList(),
+//           );
+//         }
+//         // For larger screens, show in a wrap
+//         return Wrap(
+//           spacing: 12,
+//           runSpacing: 12,
+//           children: recentFiles
+//               .map(
+//                 (file) =>
+//                 SizedBox(width: 200, child: _RecentFileItem(file: file)),
+//           )
+//               .toList(),
+//         );
+//       },
+//     );
+//   }
+// }
+//
+// class _RecentFileItem extends StatelessWidget {
+//   final RecentFile file;
+//
+//   const _RecentFileItem({required this.file});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final fileProvider = Provider.of<FileProvider>(context, listen: false);
+//     final pdfProvider = Provider.of<PdfProvider>(context, listen: false);
+//
+//     return Card(
+//       elevation: 2,
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.circular(12),
+//         side: BorderSide(
+//           color: file.isSelected
+//               ? const Color(0xFF8A2BE2)
+//               : const Color(0xFFF0EAFA),
+//           width: file.isSelected ? 2 : 1,
+//         ),
+//       ),
+//       child: InkWell(
+//         borderRadius: BorderRadius.circular(12),
+//         onTap: () {
+//           fileProvider.selectRecentFile(file);
+//         },
+//         child: Container(
+//           padding: const EdgeInsets.all(16),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               // File Icon and Name
+//               Row(
+//                 children: [
+//                   Container(
+//                     padding: const EdgeInsets.all(8),
+//                     decoration: BoxDecoration(
+//                       color: const Color(0xFF8A2BE2).withOpacity(0.1),
+//                       borderRadius: BorderRadius.circular(8),
+//                     ),
+//                     child: const Icon(
+//                       Icons.picture_as_pdf,
+//                       size: 20,
+//                       color: Color(0xFF8A2BE2),
+//                     ),
+//                   ),
+//                   const SizedBox(width: 12),
+//                   Expanded(
+//                     child: Text(
+//                       file.name,
+//                       style: const TextStyle(
+//                         fontSize: 14,
+//                         fontWeight: FontWeight.w500,
+//                         color: Color(0xFF333333),
+//                       ),
+//                       overflow: TextOverflow.ellipsis,
+//                     ),
+//                   ),
+//                   // Cross icon to delete file from recent list
+//                   IconButton(
+//                     icon: const Icon(Icons.close, size: 18),
+//                     color: const Color(0xFF666666),
+//                     padding: EdgeInsets.zero,
+//                     constraints: const BoxConstraints(),
+//                     onPressed: () {
+//                       // Delete file from recent files list
+//                       fileProvider.deleteRecentFile(file);
+//                     },
+//                   ),
+//                 ],
+//               ),
+//               const SizedBox(height: 8),
+//
+//               // File Size
+//               Text(
+//                 _formatFileSize(file.size),
+//                 style: const TextStyle(fontSize: 12, color: Color(0xFF666666)),
+//               ),
+//               const SizedBox(height: 4),
+//
+//               // Upload Date
+//               Text(
+//                 _formatDate(file.uploadDate),
+//                 style: const TextStyle(fontSize: 12, color: Color(0xFF666666)),
+//               ),
+//
+//               // Selected Indicator
+//               if (file.isSelected) ...[
+//                 const SizedBox(height: 8),
+//                 Container(
+//                   padding: const EdgeInsets.symmetric(
+//                     horizontal: 8,
+//                     vertical: 4,
+//                   ),
+//                   decoration: BoxDecoration(
+//                     color: const Color(0xFF8A2BE2),
+//                     borderRadius: BorderRadius.circular(4),
+//                   ),
+//                   child: const Text(
+//                     'Selected',
+//                     style: TextStyle(
+//                       fontSize: 10,
+//                       color: Colors.white,
+//                       fontWeight: FontWeight.w500,
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//
+//               // Action Buttons
+//               const SizedBox(height: 12),
+//               Row(
+//                 children: [
+//                   Expanded(
+//                     child: _buildActionButton(
+//                       context: context,
+//                       icon: Icons.chat,
+//                       label: AppLocalizations.of(context).chat,
+//                       onTap: () {
+//                         pdfProvider.selectRecentFileAndNavigate(
+//                           file,
+//                           BottomNavItem.chat,
+//                         );
+//                       },
+//                     ),
+//                   ),
+//                   const SizedBox(width: 8),
+//                   Expanded(
+//                     child: _buildActionButton(
+//                       context: context,
+//                       icon: Icons.summarize,
+//                       label: AppLocalizations.of(context).summary,
+//                       onTap: () {
+//                         pdfProvider.selectRecentFileAndNavigate(
+//                           file,
+//                           BottomNavItem.summarize,
+//                         );
+//                       },
+//                     ),
+//                   ),
+//                   const SizedBox(width: 8),
+//                   Expanded(
+//                     child: _buildActionButton(
+//                       context: context,
+//                       icon: Icons.quiz,
+//                       label: AppLocalizations.of(context).quiz,
+//                       onTap: () {
+//                         pdfProvider.selectRecentFileAndNavigate(
+//                           file,
+//                           BottomNavItem.quiz,
+//                         );
+//                       },
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildActionButton({
+//     required BuildContext context,
+//     required IconData icon,
+//     required String label,
+//     required VoidCallback onTap,
+//   }) {
+//     return GestureDetector(
+//       onTap: onTap,
+//       child: Container(
+//         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+//         decoration: BoxDecoration(
+//           color: const Color(0xFF8A2BE2).withOpacity(0.1),
+//           borderRadius: BorderRadius.circular(6),
+//         ),
+//         child: Column(
+//           children: [
+//             Icon(icon, size: 16, color: const Color(0xFF8A2BE2)),
+//             const SizedBox(height: 2),
+//             Text(
+//               label,
+//               style: const TextStyle(
+//                 fontSize: 10,
+//                 color: Color(0xFF8A2BE2),
+//                 fontWeight: FontWeight.w500,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   String _formatFileSize(int bytes) {
+//     if (bytes < 1024) return '$bytes B';
+//     if (bytes < 1048576) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+//     return '${(bytes / 1048576).toStringAsFixed(1)} MB';
+//   }
+//
+//   String _formatDate(DateTime date) {
+//     final now = DateTime.now();
+//     final difference = now.difference(date);
+//
+//     if (difference.inDays > 7) {
+//       return '${date.day}/${date.month}/${date.year}';
+//     } else if (difference.inDays > 0) {
+//       return '${difference.inDays} days ago';
+//     } else if (difference.inHours > 0) {
+//       return '${difference.inHours} hours ago';
+//     } else if (difference.inMinutes > 0) {
+//       return '${difference.inMinutes} minutes ago';
+//     } else {
+//       return 'Just now';
+//     }
+//   }
+// }
+
+import 'package:docusense_ai/app_localization.dart';
+import 'package:docusense_ai/models/app_state.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:docusense_ai/providers/file_provider.dart';
+import 'package:docusense_ai/providers/pdf_provider.dart';
 
 class RecentFilesSection extends StatelessWidget {
   const RecentFilesSection({super.key});
@@ -15,7 +601,7 @@ class RecentFilesSection extends StatelessWidget {
         final recentFiles = fileProvider.recentFiles;
 
         if (recentFiles.isEmpty) {
-          return const SizedBox.shrink(); // Don't show if no recent files
+          return const SizedBox.shrink();
         }
 
         return Container(
@@ -70,8 +656,8 @@ class _RecentFilesList extends StatelessWidget {
           children: recentFiles
               .map(
                 (file) =>
-                    SizedBox(width: 200, child: _RecentFileItem(file: file)),
-              )
+                SizedBox(width: 200, child: _RecentFileItem(file: file)),
+          )
               .toList(),
         );
       },
@@ -137,6 +723,30 @@ class _RecentFileItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  // ✅ FIXED: Delete button now clears both providers
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 18),
+                    color: const Color(0xFF666666),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () {
+                      // Check if this is the currently loaded file
+                      final isCurrentFile = (fileProvider.fileName == file.name &&
+                          fileProvider.fileSize == file.size);
+
+                      // Delete from recent files (FileProvider handles clearing current file)
+                      fileProvider.deleteRecentFile(file);
+
+                      // If it was the current file, also reset PdfProvider state
+                      if (isCurrentFile) {
+                        pdfProvider.resetUpload();
+                        // Navigate back to home if user is on chat/summary/quiz
+                        if (pdfProvider.currentTab != BottomNavItem.home) {
+                          pdfProvider.changeTab(BottomNavItem.home);
+                        }
+                      }
+                    },
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -177,14 +787,15 @@ class _RecentFileItem extends StatelessWidget {
                 ),
               ],
 
-              // Action Buttons - UPDATED
+              // Action Buttons
               const SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
                     child: _buildActionButton(
+                      context: context,
                       icon: Icons.chat,
-                      label: 'Chat',
+                      label: AppLocalizations.of(context).chat,
                       onTap: () {
                         pdfProvider.selectRecentFileAndNavigate(
                           file,
@@ -196,8 +807,9 @@ class _RecentFileItem extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: _buildActionButton(
+                      context: context,
                       icon: Icons.summarize,
-                      label: 'Summary',
+                      label: AppLocalizations.of(context).summary,
                       onTap: () {
                         pdfProvider.selectRecentFileAndNavigate(
                           file,
@@ -209,8 +821,9 @@ class _RecentFileItem extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: _buildActionButton(
+                      context: context,
                       icon: Icons.quiz,
-                      label: 'Quiz',
+                      label: AppLocalizations.of(context).quiz,
                       onTap: () {
                         pdfProvider.selectRecentFileAndNavigate(
                           file,
@@ -229,6 +842,7 @@ class _RecentFileItem extends StatelessWidget {
   }
 
   Widget _buildActionButton({
+    required BuildContext context,
     required IconData icon,
     required String label,
     required VoidCallback onTap,

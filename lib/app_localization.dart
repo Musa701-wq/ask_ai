@@ -12,7 +12,7 @@ class AppLocalizations {
 
   static const Map<String, Map<String, String>> _localizedValues = {
     'en': {
-      'appTitle': 'DocuSense AI',
+      'appTitle': 'IntelliDocs AI',
       'tagline': 'Your AI-Powered Document Assistant',
       'loadingApplication': 'Loading application',
       'pleaseUploadPdfFirst': 'Please upload a PDF first to start chatting',
@@ -29,7 +29,7 @@ class AppLocalizations {
       'submit': 'Submit',
       'loading': 'Loading...',
       'error': 'An error occurred',
-      'copyright': '© 2025 DocuSense AI',
+      'copyright': '© 2025 IntelliDocs AI',
       'selectLanguage': 'Select Language',
       'chatWithAny': 'Chat with any ',
       'document': 'Document',
@@ -119,7 +119,7 @@ class AppLocalizations {
       'signedInSuccessfully': 'Signed in successfully',
     },
     'es': {
-      'appTitle': 'DocuSense AI',
+      'appTitle': 'IntelliDocs AI',
       'tagline': 'Tu Asistente de Documentos con IA',
       'loadingApplication': 'Cargando aplicación',
       'pleaseUploadPdfFirst': 'Por favor, sube un PDF primero para chatear',
@@ -137,7 +137,7 @@ class AppLocalizations {
       'submit': 'Enviar',
       'loading': 'Cargando...',
       'error': 'Ocurrió un error',
-      'copyright': '© 2025 DocuSense AI',
+      'copyright': '© 2025 IntelliDocs AI',
       'selectLanguage': 'Seleccionar idioma',
       'document': 'Documento',
       'uploadAndChatDescription':
@@ -233,7 +233,7 @@ class AppLocalizations {
       'chinese': 'Chino',
     },
     'fr': {
-      'appTitle': 'DocuSense AI',
+      'appTitle': 'IntelliDocs AI',
       'tagline': 'Votre Assistant Documentaire IA',
       'loadingApplication': 'Chargement de l\'application',
       'pleaseUploadPdfFirst':
@@ -251,7 +251,7 @@ class AppLocalizations {
       'submit': 'Soumettre',
       'loading': 'Chargement...',
       'error': 'Une erreur est survenue',
-      'copyright': '© 2025 DocuSense AI',
+      'copyright': '© 2025 IntelliDocs AI',
       'selectLanguage': 'Choisir la langue',
       'chatWithAny': 'Discutez avec n\'importe quel ',
       'document': 'Document',
@@ -346,7 +346,7 @@ class AppLocalizations {
       'chinese': 'Chinois',
     },
     'de': {
-      'appTitle': 'DocuSense AI',
+      'appTitle': 'IntelliDocs AI',
       'tagline': 'Ihr KI-gestützter Dokumentenassistent',
       'loadingApplication': 'Anwendung wird geladen',
       'pleaseUploadPdfFirst':
@@ -368,7 +368,7 @@ class AppLocalizations {
       'submit': 'Einreichen',
       'loading': 'Lädt...',
       'error': 'Ein Fehler ist aufgetreten',
-      'copyright': '© 2025 DocuSense AI',
+      'copyright': '© 2025 IntelliDocs AI',
       'selectLanguage': 'Sprache auswählen',
       'uploadPdfHere': 'PDF hier hochladen',
       'tapToSelectFile': 'Tippen, um eine Datei auszuwählen',
@@ -463,7 +463,7 @@ class AppLocalizations {
     },
     'nl': {
       'recentFiles': 'Recente Bestanden',
-      'appTitle': 'DocuSense AI',
+      'appTitle': 'IntelliDocs AI',
       'tagline': 'Uw AI-aangedreven Documentassistent',
       'loadingApplication': 'Applicatie laden',
       'pleaseUploadPdfFirst': 'Upload eerst een PDF om te chatten',
@@ -480,7 +480,7 @@ class AppLocalizations {
       'submit': 'Indienen',
       'loading': 'Laden...',
       'error': 'Er is een fout opgetreden',
-      'copyright': '© 2025 DocuSense AI',
+      'copyright': '© 2025 IntelliDocs AI',
       'selectLanguage': 'Selecteer taal',
       'chatWithAny': 'Chat met elk ',
       'document': 'Document',
@@ -570,7 +570,7 @@ class AppLocalizations {
       'chinese': 'Chinees',
     },
     'ar': {
-      'appTitle': 'DocuSense AI',
+      'appTitle': 'IntelliDocs AI',
       'tagline': 'مساعدك الذكي للمستندات',
       'recentFiles': 'الملفات الحديثة',
       'loadingApplication': 'جاري تحميل التطبيق',
@@ -588,7 +588,7 @@ class AppLocalizations {
       'submit': 'إرسال',
       'loading': 'جاري التحميل...',
       'error': 'حدث خطأ',
-      'copyright': '© 2025 DocuSense AI',
+      'copyright': '© 2025 IntelliDocs AI',
       'selectLanguage': 'اختر اللغة',
       'chatWithAny': 'تحدث مع أي ',
       'document': 'مستند',
@@ -680,7 +680,7 @@ class AppLocalizations {
       'fileSelected': 'تم اختيار الملف',
     },
     'zh': {
-      'appTitle': 'DocuSense AI',
+      'appTitle': 'IntelliDocs AI',
       'tagline': '您的AI驱动文档助手',
       'loadingApplication': '正在加载应用程序',
       'pleaseUploadPdfFirst': '请先上传PDF文件开始聊天',
@@ -698,7 +698,7 @@ class AppLocalizations {
       'submit': '提交',
       'loading': '加载中...',
       'error': '发生错误',
-      'copyright': '© 2025 DocuSense AI',
+      'copyright': '© 2025 IntelliDocs AI',
       'selectLanguage': '选择语言',
       'chatWithAny': '与任何',
       'document': '文档聊天',

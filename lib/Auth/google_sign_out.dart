@@ -10,28 +10,34 @@ Future<void> unifiedSignOut(BuildContext context) async {
   try {
     final user = FirebaseAuth.instance.currentUser;
 
-    // Sign out from Firebase
-    await FirebaseAuth.instance.signOut();
-
     // Additional provider-specific signout if needed
     if (user != null) {
       for (final userInfo in user.providerData) {
         if (userInfo.providerId == 'google.com') {
-          await GoogleSignIn().signOut();
+          final googleSignIn = GoogleSignIn(
+            clientId: '184992833888-imt41q5ddv8jifdelhp0rccdi71o7nhh.apps.googleusercontent.com',
+          );
+          await googleSignIn.disconnect();
+          await googleSignIn.signOut();
+          debugPrint("✅ Google Sign-In fully disconnected");
         }
-        // Apple doesn't require additional signout beyond Firebase
       }
     }
 
-    // Reset all providers
-    final authState = Provider.of<AuthState>(context, listen: false);
-    final pdfProvider = Provider.of<PdfProvider>(context, listen: false);
-    final fileProvider = Provider.of<FileProvider>(context, listen: false);
+    // Sign out from Firebase
+    await FirebaseAuth.instance.signOut();
 
-    authState.signOut(); // Rename signOut to clearUser to avoid confusion
-    pdfProvider.resetUpload();
-    fileProvider.clearFile();
-    fileProvider.clearSelection();
+    // Reset all providers
+    if (context.mounted) {
+      final authState = Provider.of<AuthState>(context, listen: false);
+      final pdfProvider = Provider.of<PdfProvider>(context, listen: false);
+      final fileProvider = Provider.of<FileProvider>(context, listen: false);
+
+      authState.signOut();
+      pdfProvider.resetUpload();
+      fileProvider.clearFile();
+      fileProvider.clearSelection();
+    }
 
     debugPrint("Successfully signed out and reset app state");
   } catch (e) {

@@ -1,3 +1,4 @@
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:docusense_ai/firebase_options.dart';
 import 'package:docusense_ai/providers/ad_provider.dart';
 import 'package:docusense_ai/providers/auth_state.dart';
@@ -6,6 +7,8 @@ import 'package:docusense_ai/screens/chat/chat_screen.dart';
 import 'package:docusense_ai/screens/quiz/quiz_screen.dart';
 import 'package:docusense_ai/screens/splash/splash_screen.dart';
 import 'package:docusense_ai/screens/summary/summary_screen.dart';
+import 'package:docusense_ai/utils/ads_manager.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,25 +21,55 @@ import 'providers/language_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-    GlobalKey<ScaffoldMessengerState>();
+GlobalKey<ScaffoldMessengerState>();
+final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await MobileAds.instance.initialize();
   await dotenv.load(fileName: ".env");
-  runApp(const SecureVault());
+
+  // 🔥 Request tracking permission (only for iOS)
+  final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+  if (status == TrackingStatus.notDetermined) {
+    await AppTrackingTransparency.requestTrackingAuthorization();
+  }
+
+  // AdMob initialization - CRITICAL: Initialize before requesting tracking
+  await AdManager.initialize();
+  debugPrint('✅ AdMob initialized');
+
+  // Initialize AdProvider and load saved data
+  final adProvider = AdProvider();
+  await adProvider.initialize();
+
+
+  // Initialize AuthState
+  final authState = AuthState();
+  authState.checkAuthState(); // Check if user is already signed in
+  await analytics.logEvent(name: 'debug_view_test');
+  print('📊 Logged debug_view_test event for DebugView');
+
+  runApp(SecureVault(adProvider: adProvider, authState: authState));
 }
 
 class SecureVault extends StatelessWidget {
-  const SecureVault({super.key});
+  final AdProvider adProvider;
+  final AuthState authState;
+
+  const SecureVault({
+    super.key,
+    required this.adProvider,
+    required this.authState,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AdProvider()),
-        ChangeNotifierProvider(create: (_) => AuthState()),
+        ChangeNotifierProvider.value(value: adProvider),
+        ChangeNotifierProvider.value(value: authState), // Use initialized instance
         ChangeNotifierProvider(create: (_) => FileProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProxyProvider<FileProvider, PdfProvider>(
@@ -53,7 +86,7 @@ class SecureVault extends StatelessWidget {
       child: Consumer<LanguageProvider>(
         builder: (context, languageProvider, child) {
           return MaterialApp(
-            title: 'DocuSense AI',
+            title: 'IntelliDocs AI',
             debugShowCheckedModeBanner: false,
             scaffoldMessengerKey: scaffoldMessengerKey,
             localizationsDelegates: const [
@@ -82,9 +115,9 @@ class SecureVault extends StatelessWidget {
             ),
             home: const SplashScreen(),
             routes: {
-              '/chat': (context) => ChatScreen(),
-              '/summary': (context) => SummaryScreen(),
-              '/quiz': (context) => QuizScreen(),
+              '/chat': (context) => const ChatScreen(),
+              '/summary': (context) => const SummaryScreen(),
+              '/quiz': (context) => const QuizScreen(),
             },
           );
         },
